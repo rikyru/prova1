@@ -7,28 +7,28 @@
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/Home"
-        app:showAsAction="withText" />
+        app:showAsAction="always|withText" />
 
     <item
         android:id="@+id/navigation_planning"
         android:icon="@android:drawable/ic_lock_idle_alarm"
         android:title="@string/Planning"
-        app:showAsAction="withText" />
+        app:showAsAction="always|withText" />
 
     <item
         android:id="@+id/navigation_measure"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/Measure"
-        app:showAsAction="withText" />
+        app:showAsAction="always|withText" />
     <item
         android:id="@+id/navigation_graphs"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/Graphs"
-        app:showAsAction="withText" />
+        app:showAsAction="always|withText" />
     <item
         android:id="@+id/navigation_profile"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/Profile"
-        app:showAsAction="withText" />
+        app:showAsAction="always|withText" />
 
 </menu>
