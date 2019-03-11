@@ -1,8 +1,18 @@
 package com.example.ruggiu.prova1;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,14 +23,17 @@ import android.widget.EditText;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Object mMessageReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNavigationView =(BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
-        Menu menu= bottomNavigationView.getMenu();
+        Menu menu = bottomNavigationView.getMenu();
         MenuItem menuItem = ((Menu) menu).getItem(0);
         menuItem.setChecked(true);
 
@@ -31,19 +44,19 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_home:
                         break;
                     case R.id.navigation_planning:
-                        Intent intent_planning=new Intent(MainActivity.this, Planning.class);
+                        Intent intent_planning = new Intent(MainActivity.this, Planning.class);
                         startActivity(intent_planning);
                         break;
                     case R.id.navigation_measure:
-                        Intent intent_measurements=new Intent(MainActivity.this, Measurments.class);
+                        Intent intent_measurements = new Intent(MainActivity.this, Measurments.class);
                         startActivity(intent_measurements);
                         break;
                     case R.id.navigation_graphs:
-                        Intent intent_graphs=new Intent(MainActivity.this, Graphs.class);
+                        Intent intent_graphs = new Intent(MainActivity.this, Graphs.class);
                         startActivity(intent_graphs);
                         break;
                     case R.id.navigation_profile:
-                        Intent intent_profile=new Intent(MainActivity.this, Profile.class);
+                        Intent intent_profile = new Intent(MainActivity.this, Profile.class);
                         startActivity(intent_profile);
                         break;
                 }
@@ -51,10 +64,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel("CHANNEL_PROVA", "channel", importance);
+            channel.setDescription(description);
+            channel.enableVibration(false);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+        else {
+            Intent i = new Intent(getApplicationContext(), MyService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(i);
+            } else {
+                startService(i);
+            }
+        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                (BroadcastReceiver) mMessageReceiver, new IntentFilter("BP Measure Update"));
 
     }
-
+    
 }
 
