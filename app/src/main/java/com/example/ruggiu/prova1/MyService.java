@@ -282,7 +282,10 @@ public class MyService extends Service {
                 float diastolic=characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_SFLOAT, 3);
                 float systolic=characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_SFLOAT, 1);
                 float pulse=characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_SFLOAT, 14);
-                sendMessageToActivity(systolic, diastolic, pulse);
+                String sdiastolic=Float.toString(diastolic);
+                String ssystolic=Float.toString(systolic);
+                String spulse=Float.toString(pulse);
+                sendMessageToActivity(ssystolic, sdiastolic, spulse);
 
                 final boolean contactSupported = !((data[0] & 0x06) == 0);
                 if (contactSupported) {
@@ -383,7 +386,7 @@ public class MyService extends Service {
 
         }
     };
-    private static void sendMessageToActivity(float sys, float dia, float pulse) {
+    private static void sendMessageToActivity(String sys, String dia, String pulse) {
         Intent intent = new Intent("BP Measure Update");
         // You can also include some extra data.
         intent.putExtra("systolic", sys);

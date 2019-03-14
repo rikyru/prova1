@@ -109,22 +109,20 @@
             android:text="Last update: Fri 18/01 11:30" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/textViewsys"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:text="SYS 120 mmHg"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/textViewdia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:text="DIA 80 mmHg"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
@@ -137,6 +135,11 @@
             android:background="@android:color/background_dark"
             android:text="More details"
             android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>

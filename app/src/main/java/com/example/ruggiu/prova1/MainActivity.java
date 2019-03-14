@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -19,12 +20,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class MainActivity extends AppCompatActivity {
 
-    private Object mMessageReceiver;
+
+public class MainActivity extends AppCompatActivity {
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String sys = "Systolic: " + intent.getStringExtra("systolic") + "mmHg";
+            String dia = "Diastolic: "+ intent.getStringExtra("diastolic") + "mmHg";
+            String pulse = intent.getStringExtra("pulse");
+            Toast.makeText(context, "New Measurement!", Toast.LENGTH_SHORT).show();
+            TextView textViewsys = findViewById(R.id.textViewsys);
+            textViewsys.setText(sys);
+            TextView textViewdia = findViewById(R.id.textViewdia);
+            textViewdia.setText(dia);
+            System.out.println(sys);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
                 startService(i);
             }
         }
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                (BroadcastReceiver) mMessageReceiver, new IntentFilter("BP Measure Update"));
-
+        LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(
+                mMessageReceiver, new IntentFilter("BP Measure Update"));
     }
+
     
 }
 
