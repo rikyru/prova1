@@ -17,6 +17,9 @@
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_charts">Charts</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="hint_word">Word...</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">Word not saved because it is empty.</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
