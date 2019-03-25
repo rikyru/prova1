@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/record_systolic"
+        android:fontFamily="serif"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:textColor="#000"
+        android:text="Systolic"/>
+    <TextView
+        android:id="@+id/record_diastolic"
+        android:textColor="#000"
+        android:fontFamily="serif"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:text="Diastolic"/>
+    <TextView
+        android:textColor="#000"
+        android:id="@+id/record_timestamp"
+        android:fontFamily="serif"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:text="Time"/>
+
+</LinearLayout>

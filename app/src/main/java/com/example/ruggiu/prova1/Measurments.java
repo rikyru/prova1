@@ -2,8 +2,13 @@ package com.example.ruggiu.prova1;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -20,8 +25,8 @@ import java.util.List;
 
 public class Measurments extends AppCompatActivity {
 
-    private WordViewModel mWordViewModel;
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+
 
 
     @Override
@@ -58,27 +63,35 @@ public class Measurments extends AppCompatActivity {
                         break;
                 }
                 return false;
+
             }
         });
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final WordListAdapter adapter = new WordListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mWordViewModel = ViewModelProviders.of(this).get(WordViewModel.class);
-        mWordViewModel.getAllWords().observe(this, new Observer<List<Word>>() {
-            @Override
-            public void onChanged(@Nullable final List<Word> words) {
-                // Update the cached copy of the words in the adapter.
-                adapter.setWords(words);
-            }
-        });
+
+
     }
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
-            mWordViewModel.insert(word);
+            //INSERT IN DB
+            String word = data.getStringExtra(NewWordActivity.EXTRA_REPLY);
+            PressureReaderDbHelper dbHelper = new PressureReaderDbHelper(Measurments.this);
+            // Gets the data repository in write mode
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            // Create a new map of values, where column names are the keys
+            ContentValues values = new ContentValues();
+            values.put(PressureReaderContract.FeedEntry.COLUMN_NAME_SYS, word);
+            values.put(PressureReaderContract.FeedEntry.COLUMN_NAME_DIA, word);
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd,MMMM,yyyy hh,mm,a");
+            String strDate = sdf.format(c.getTime());
+            values.put(PressureReaderContract.FeedEntry.COLUMN_NAME_TIME, strDate); //mi da errore nell'aggiungere questa colonna nonostante sia dichiarata
+
+            // Insert the new row, returning the primary key value of the new row
+            long newRowId = db.insert(PressureReaderContract.FeedEntry.TABLE_NAME, null, values);
+
+
         } else {
             Toast.makeText(
                     getApplicationContext(),
@@ -86,9 +99,10 @@ public class Measurments extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }
     }
-    public void sendword(View view) {
+    public void AddMeasure(View view) {
         Intent intent = new Intent(Measurments.this, NewWordActivity.class);
         startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
     }
+
 
 }

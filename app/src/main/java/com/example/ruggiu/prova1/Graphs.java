@@ -1,12 +1,25 @@
 package com.example.ruggiu.prova1;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Graphs extends AppCompatActivity {
 
@@ -14,6 +27,7 @@ public class Graphs extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graphs);
+        RecordAdapter recordAdapter;
 
         BottomNavigationView bottomNavigationView =(BottomNavigationView) findViewById(R.id.navigation);
 
@@ -47,5 +61,50 @@ public class Graphs extends AppCompatActivity {
                 return false;
             }
         });
+        PressureReaderDbHelper dbHelper= new PressureReaderDbHelper(Graphs.this);
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                BaseColumns._ID,
+                PressureReaderContract.FeedEntry.COLUMN_NAME_SYS,
+                PressureReaderContract.FeedEntry.COLUMN_NAME_DIA,
+                PressureReaderContract.FeedEntry.COLUMN_NAME_TIME
+        };
+
+        // Filter results WHERE "title" = 'My Title'
+       // String selection = PressureReaderContract.FeedEntry.COLUMN_NAME_TITLE + " = ?";
+        //String[] selectionArgs = { "My Title" };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                PressureReaderContract.FeedEntry.COLUMN_NAME_DIA + "";
+
+        Cursor cursor = db.query(
+                PressureReaderContract.FeedEntry.TABLE_NAME,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null, //selection,              // The columns for the WHERE clause
+                null, //selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+        recordAdapter = new RecordAdapter(this, new ArrayList<Record>());
+        final ListView recordsView = (ListView) findViewById(R.id.records_view);
+        recordsView.setAdapter(recordAdapter);
+        while(cursor.moveToNext()) {
+            String sys=cursor.getString(1);
+            String dia=cursor.getString(2);
+            String timestamp=cursor.getString(3);
+            Record record = new Record();
+            record.systolic=sys;
+            record.diastolic=dia;
+            record.timestamp=timestamp;
+            recordAdapter.add(record);
+
+        }
+        cursor.close();
+
     }
 }
