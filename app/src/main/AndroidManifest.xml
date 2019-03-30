@@ -16,7 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewWordActivity"></activity>
         <!--
          <activity
             android:name=".LoginActivity"
@@ -31,6 +30,7 @@
         <activity android:name=".Graphs" />
         <activity android:name=".Planning" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".NewMeasureActivity" />
         <activity
             android:name=".Measurments"
             android:label="@string/title_activity_measurments" />

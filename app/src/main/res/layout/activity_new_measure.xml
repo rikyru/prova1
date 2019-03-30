@@ -5,20 +5,32 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/edit_word"
-        android:layout_width="match_parent"
+        android:id="@+id/edit_pressure_systolic"
+        android:layout_width="139dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_padding"
+        android:layout_marginBottom="@dimen/big_padding"
         android:fontFamily="sans-serif-light"
-        android:hint="@string/hint_word"
+        android:hint="@string/hint_systolic"
         android:inputType="textAutoComplete"
         android:padding="@dimen/small_padding"
-        android:layout_marginBottom="@dimen/big_padding"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/edit_pressure_diastolic"
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_padding"
+        android:layout_marginBottom="@dimen/big_padding"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/hint_diastolic"
+        android:inputType="textAutoComplete"
+        android:padding="@dimen/small_padding"
         android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_save"
-        android:layout_width="match_parent"
+        android:layout_width="139dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:text="@string/button_save"

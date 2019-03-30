@@ -8,27 +8,31 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class NewWordActivity extends AppCompatActivity {
+public class NewMeasureActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.example.android.wordlistsql.REPLY";
 
-    private EditText mEditWordView;
+    private EditText mEditSystolicPressure;
+    private EditText mEditDiastolicPressure;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_word);
-        mEditWordView = findViewById(R.id.edit_word);
+        setContentView(R.layout.activity_new_measure);
+        mEditSystolicPressure = findViewById(R.id.edit_pressure_systolic);
+        mEditDiastolicPressure = findViewById(R.id.edit_pressure_diastolic);
 
         final Button button = findViewById(R.id.button_save);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent replyIntent = new Intent();
-                if (TextUtils.isEmpty(mEditWordView.getText())) {
+                if (TextUtils.isEmpty(mEditSystolicPressure.getText())) { //mettere un or anche sulla diastolica
                     setResult(RESULT_CANCELED, replyIntent);
                 } else {
-                    String word = mEditWordView.getText().toString();
-                    replyIntent.putExtra(EXTRA_REPLY, word);
+                    String systolic = mEditSystolicPressure.getText().toString();
+                    String diastolic = mEditDiastolicPressure.getText().toString();
+                    replyIntent.putExtra("systolic", systolic);
+                    replyIntent.putExtra("diastolic", diastolic);
                     setResult(RESULT_OK, replyIntent);
                 }
                 finish();
