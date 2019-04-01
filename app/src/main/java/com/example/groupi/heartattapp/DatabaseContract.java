@@ -1,4 +1,4 @@
-package com.example.ruggiu.prova1;
+package com.example.groupi.heartattapp;
 
 import android.provider.BaseColumns;
 
@@ -14,6 +14,8 @@ public final class DatabaseContract {
         public static final String TABLE_NAME_MEASURE_TYPES= "measure_types";
         public static final String COLUMN_NAME_ID_USER = "id_user";
         public static final String COLUMN_NAME_USERNAME = "username";
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_SURNAME = "surname";
         public static final String COLUMN_NAME_PASSWORD = "password";
         public static final String COLUMN_NAME_DATE_OF_BIRTH = "date_of_birth";
         public static final String COLUMN_NAME_DR_EMAIL = "dr_email";

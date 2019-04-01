@@ -1,19 +1,12 @@
-package com.example.ruggiu.prova1;
+package com.example.groupi.heartattapp;
 
-import android.arch.persistence.room.Database;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.io.IOException;
 
 public class Planning extends AppCompatActivity {
 

@@ -99,14 +99,13 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/textView18"
+            android:id="@+id/textViewlastpressure"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="16dp"
-            android:text="Last update: Fri 18/01 11:30" />
+            android:layout_marginBottom="16dp" />
 
         <TextView
             android:id="@+id/textViewsys"

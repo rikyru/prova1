@@ -1,10 +1,8 @@
-package com.example.ruggiu.prova1;
+package com.example.groupi.heartattapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
 import android.widget.Toast;
 
 public class mMessageReceiver {

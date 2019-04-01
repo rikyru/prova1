@@ -1,4 +1,4 @@
-package com.example.ruggiu.prova1;
+package com.example.groupi.heartattapp;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -7,13 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class Profile extends AppCompatActivity {
+    private TextView etName, etSurname, etDOB, etUsername, etPassword, etPhysician;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
 
         BottomNavigationView bottomNavigationView =(BottomNavigationView) findViewById(R.id.navigation);
 
@@ -47,5 +50,27 @@ public class Profile extends AppCompatActivity {
                 return false;
             }
         });
+
+        etName = (TextView) findViewById(R.id.etName);
+        //etAge = (EditText) findViewById(R.id.etAge);
+        etSurname = (TextView) findViewById(R.id.etSurname);
+        etDOB = (TextView) findViewById(R.id.tvDate);
+        etUsername = (TextView) findViewById(R.id.etUsername);
+        etPassword = (TextView) findViewById(R.id.etPassword);
+        etPhysician = (TextView) findViewById(R.id.etPhysicianEmail);
+
+        DatabaseDbHelper db = new DatabaseDbHelper(Profile.this);
+        User result;
+        result = db.getUserInfo(Profile.this);
+
+        etName.setText(result.name);
+        etSurname.setText(result.surname);
+//        etDOB.setText(result.DOB);
+        etPassword.setText(result.password);
+        etUsername.setText(result.username);
+        etPhysician.setText(result.dr_email);
+
+
+
     }
 }

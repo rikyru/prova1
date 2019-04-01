@@ -1,4 +1,4 @@
-package com.example.ruggiu.prova1;
+package com.example.groupi.heartattapp;
 
 public class Record {
     public String systolic;

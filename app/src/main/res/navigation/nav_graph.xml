@@ -6,17 +6,17 @@
     app:startDestination="@id/mainActivity2">
     <activity
         android:id="@+id/mainActivity2"
-        android:name="com.example.ruggiu.prova1.MainActivity"
+        android:name="com.example.groupi.heartattapp.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
     <activity
         android:id="@+id/text_bottom4"
-        android:name="com.example.ruggiu.prova1.text_bottom"
+        android:name="com.example.groupi.heartattapp.text_bottom"
         android:label="activity_text_bottom"
         tools:layout="@layout/activity_text_bottom" />
     <activity
         android:id="@+id/displayMessageActivity"
-        android:name="com.example.ruggiu.prova1.DisplayMessageActivity"
+        android:name="com.example.groupi.heartattapp.DisplayMessageActivity"
         android:label="activity_display_message"
         tools:layout="@layout/activity_display_message" />
 </navigation>

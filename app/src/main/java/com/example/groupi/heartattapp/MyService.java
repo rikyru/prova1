@@ -1,4 +1,4 @@
-package com.example.ruggiu.prova1;
+package com.example.groupi.heartattapp;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -17,7 +17,6 @@ import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;

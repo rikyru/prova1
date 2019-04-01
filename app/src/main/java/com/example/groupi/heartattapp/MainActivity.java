@@ -1,4 +1,4 @@
-package com.example.ruggiu.prova1;
+package com.example.groupi.heartattapp;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -18,21 +18,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
-
 
 public class MainActivity extends AppCompatActivity {
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+    /*private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            String sys = "Systolic: " + intent.getStringExtra("systolic") + "mmHg";
+            String sys = "Systolic: " + intent.getStringExtra("systolic") + "mmHg"; //TODO:Sistemare, buttare le misure sul db
             String dia = "Diastolic: "+ intent.getStringExtra("diastolic") + "mmHg";
             String pulse = intent.getStringExtra("pulse");
             Toast.makeText(context, "New Measurement!", Toast.LENGTH_SHORT).show();
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(sys);
         }
     };
-
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+/*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String description = "description";
             int importance = NotificationManager.IMPORTANCE_LOW;
@@ -106,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
         }
         LocalBroadcastManager.getInstance(MainActivity.this).registerReceiver(
                 mMessageReceiver, new IntentFilter("BP Measure Update"));
+                */ //TODO:implementare a parte il Bluetooth
+        DatabaseDbHelper db = new DatabaseDbHelper(MainActivity.this);
+        BloodPressureMeasurement result;
+        result = db.getLastMeasureBP(MainActivity.this);
+        TextView textViewlastpressure = findViewById(R.id.textViewlastpressure);
+        textViewlastpressure.setText("Last update: " + result.date);
+        TextView textViewsys = findViewById(R.id.textViewsys);
+        textViewsys.setText("Systolic: " + result.systolic +" mmHg");
+        TextView textViewdia = findViewById(R.id.textViewdia);
+        textViewdia.setText("Diastolic: " + result.diastolic +" mmHg");
     }
 
     
