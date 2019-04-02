@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Register extends AppCompatActivity {
@@ -24,6 +25,7 @@ public class Register extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     Button bRegister;
     DatabaseDbHelper myDB;
+    String date="";
 
 
     @Override
@@ -36,6 +38,7 @@ public class Register extends AppCompatActivity {
         //etAge = (EditText) findViewById(R.id.etAge);
         etSurname = (EditText) findViewById(R.id.etSurname);
         mDisplayDate = (TextView) findViewById(R.id.tvDate);
+
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etPhysicianEmail = (EditText) findViewById(R.id.etPhysicianEmail);
@@ -130,8 +133,9 @@ public class Register extends AppCompatActivity {
                         break;
                 }
 
-                String date = dayOfMonth + " " + monthABC + " " + year;
+                date = dayOfMonth + " " + monthABC + " " + year;
                 mDisplayDate.setText(date);
+
             }
         };
 
@@ -174,7 +178,7 @@ public class Register extends AppCompatActivity {
                 if(check == false){
                     isInserted = myDB.insertUser(etName.getText().toString(),
                             etSurname.getText().toString(),
-                            mDisplayDate.toString(), etUsername.getText().toString(), etPassword.getText().toString(),
+                            date, etUsername.getText().toString(), etPassword.getText().toString(),
                             etPhysicianEmail.getText().toString(), Register.this);
 
                     if (isInserted == true)

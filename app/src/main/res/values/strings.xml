@@ -14,7 +14,7 @@
     <string name="title_activity_measurments">Measure</string>
     <string name="title_activity_planning">Planning</string>
     <string name="title_activity_graphs">Graphs</string>
-    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_profile">Profile Info</string>
     <string name="title_activity_charts">Charts</string>
     <string name="title_activity_login">Sign in</string>
     <string name="hint_word">Word...</string>

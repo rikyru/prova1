@@ -18,14 +18,12 @@
         app:menu="@menu/bottommenu" />
 
     <ScrollView
-        android:id="@+id/scrollView3"
+        android:id="@+id/ScrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +64,7 @@
                 android:layout_gravity="bottom|center"
                 android:layout_margin="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Wed 13/03 08:30"
+                android:text="Wed 03/04 08:30"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -83,7 +81,7 @@
         android:layout_marginBottom="1dp"
         android:background="@color/colorAccent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
+        app:layout_constraintBottom_toBottomOf="@+id/ScrollView2"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout2">
@@ -124,16 +122,6 @@
             android:layout_margin="16dp"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_margin="16dp"
-            android:background="@android:color/background_dark"
-            android:text="More details"
-            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/textView4"
@@ -197,15 +185,6 @@
             android:text="Regular? YES"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:background="@android:color/background_dark"
-            android:text="More details"
-            android:textColor="@android:color/white" />
 
     </LinearLayout>
 

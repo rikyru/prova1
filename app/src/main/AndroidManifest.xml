@@ -31,7 +31,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Profile" />
+        <activity android:name=".Profile"
+            android:label="@string/title_activity_profile" />
         <activity android:name=".Graphs" />
         <activity android:name=".Planning" />
         <activity android:name=".MainActivity" />

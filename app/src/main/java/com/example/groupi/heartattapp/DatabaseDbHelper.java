@@ -266,7 +266,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
             password = cursor.getString(2);
             name = cursor.getString(3);
             surname = cursor.getString(4);
-            //DOB = cursor.getString(5); //TODO: implementare stringa data
+            DOB = cursor.getString(5); //TODO: implementare stringa data
             dr_email = cursor.getString(6);
 
         }
@@ -282,6 +282,34 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
 
         return record;
 
+
+    }
+
+    public boolean insert_BP(BloodPressureMeasurement bloodPressureMeasurement, Context context){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String systolic=bloodPressureMeasurement.systolic;
+        String diastolic=bloodPressureMeasurement.diastolic;
+        String measure="{systolic:" + systolic + ", diastolic:" + diastolic + "}";
+        SharedPreferences user = context.getSharedPreferences("UserLogged", MODE_PRIVATE);
+        String user_id=user.getString("user_id","");
+        String measure_type_id="2"; //TODO: mappare i tipi di misure (2 è pressione, 1 HR, 3 Sveglie)
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_VALUE, measure); //devo importare la stringa
+        String unixtimestamp = String.valueOf(System.currentTimeMillis() / 1000L); //TODO: passare la stringa quando la chiamo
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_TMSTMP, unixtimestamp );
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_ID_TYPE_MEASURE, measure_type_id);
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER, user_id );
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(DatabaseContract.FeedEntry.TABLE_NAME_MEASURES, null, values);
+
+        if (newRowId == -1)
+            return false;
+        else
+            return true;
 
     }
 

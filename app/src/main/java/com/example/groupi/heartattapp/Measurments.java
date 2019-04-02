@@ -6,17 +6,31 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class Measurments extends AppCompatActivity {
+public class Measurments extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    private EditText mEditSystolicPressure;
+    private EditText mEditDiastolicPressure;
+    private EditText edit;
+    private RadioGroup rg1;
+    private String op1;
+    private Boolean isEmpty;
+    private BloodPressureMeasurement measure;
 
 
 
@@ -29,6 +43,15 @@ public class Measurments extends AppCompatActivity {
         Menu menu= bottomNavigationView.getMenu();
         MenuItem menuItem = ((Menu) menu).getItem(2);
         menuItem.setChecked(true);
+        measure=new BloodPressureMeasurement();
+        op1="";
+
+        rg1 = (RadioGroup) findViewById(R.id.radioGroup);
+        rg1.setOnCheckedChangeListener(this);
+        edit = (EditText) findViewById(R.id.editText6);
+        actv(false);
+        mEditSystolicPressure = findViewById(R.id.editText4);
+        mEditDiastolicPressure = findViewById(R.id.editText5);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -58,45 +81,105 @@ public class Measurments extends AppCompatActivity {
             }
         });
 
+        final Button button = findViewById(R.id.button_save);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (TextUtils.isEmpty(mEditSystolicPressure.getText())) { //TODO mettere un or anche sulla diastolica
+                    isEmpty=Boolean.TRUE;
+                } else {
+                    measure.systolic = mEditSystolicPressure.getText().toString();
+                    measure.diastolic = mEditDiastolicPressure.getText().toString();
+                    if (op1.equals("other")){
+                        String symptoms = edit.getText().toString();
+                        Log.d("sintomo", symptoms);
+                    }
+                    else {
+                        String symptoms = op1;
+                    }
+
+                     //TODO:edit box che si riempie con le misurazioni prese dal sensore
+                    isEmpty=Boolean.FALSE;
+                    DatabaseDbHelper dbHelper = new DatabaseDbHelper(Measurments.this);
+                    Boolean result=dbHelper.insert_BP(measure, Measurments.this);
+                    if (result==Boolean.FALSE)
+                    {
+                        Log.e("error db insert", "error in insert");
+                    }
+                    else
+                    {
+                        Toast.makeText(Measurments.this,"Successfully added!",Toast.LENGTH_SHORT).show();
+                        new Handler().postDelayed(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Measurments.this.startActivity(new Intent(Measurments.this,MainActivity.class));
+
+                            }
+                        }, 500);
+
+                    }
+                }
+            }
+        });
+
 
     }
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void actv(final boolean active)
+    {
+        edit.setEnabled(active);
+        if (active)
+        {
+            edit.requestFocus();
+            edit.setVisibility(View.VISIBLE);
+            edit.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        }
+        else
+        {
+            edit.setVisibility(View.INVISIBLE);
 
-        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            //INSERT IN DB
-            String systolic = data.getStringExtra("systolic");
-            String diastolic = data.getStringExtra("diastolic");
-            DatabaseDbHelper dbHelper = new DatabaseDbHelper(Measurments.this);
-            // Gets the data repository in write mode
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            String measure="{systolic:" + systolic + ", diastolic:" + diastolic + "}";
-            SharedPreferences user = getSharedPreferences("UserLogged", MODE_PRIVATE);
-            String user_id=user.getString("user_id",""); //
-            String measure_type_id="2"; //TODO: mappare i tipi di misure (2 è pressione, 1 HR, 3 Sveglie)
-
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(DatabaseContract.FeedEntry.COLUMN_NAME_VALUE, measure); //devo importare la stringa
-            String unixtimestamp = String.valueOf(System.currentTimeMillis() / 1000L);
-            values.put(DatabaseContract.FeedEntry.COLUMN_NAME_TMSTMP, unixtimestamp );
-            values.put(DatabaseContract.FeedEntry.COLUMN_NAME_ID_TYPE_MEASURE, measure_type_id);
-            values.put(DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER, user_id );
-
-            // Insert the new row, returning the primary key value of the new row
-            long newRowId = db.insert(DatabaseContract.FeedEntry.TABLE_NAME_MEASURES, null, values);
-
-
-        } else {
-            Toast.makeText(
-                    getApplicationContext(),
-                    R.string.empty_not_saved,
-                    Toast.LENGTH_LONG).show();
         }
     }
-    public void AddMeasure(View view) {
-        Intent intent = new Intent(Measurments.this, NewMeasureActivity.class);
-        startActivityForResult(intent, NEW_WORD_ACTIVITY_REQUEST_CODE);
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.radioButton7:
+                op1="other";
+                actv(true);
+                break;
+
+            case R.id.radioButton:
+                actv(false);
+                op1="chest";
+                break;
+
+            case R.id.radioButton2:
+                actv(false);
+                op1="shortness";
+                break;
+
+            case R.id.radioButton3:
+                actv(false);
+                op1="palpitations";
+                break;
+
+            case R.id.radioButton4:
+                actv(false);
+                op1="sweling";
+                break;
+
+            case R.id.radioButton5:
+                actv(false);
+                op1="diziness";
+                break;
+
+            case R.id.radioButton6:
+                actv(false);
+                op1="fatigue";
+                break;
+
+        }
+
     }
 
 
