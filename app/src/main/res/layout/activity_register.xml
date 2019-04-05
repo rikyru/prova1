@@ -75,11 +75,7 @@
 
         />
 
-    <Button
-        android:id="@+id/bRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign up" />
+
 
     <TextView
         android:id="@+id/textView6"
@@ -95,4 +91,9 @@
         android:inputType="textEmailAddress"
 
         />
+    <Button
+        android:id="@+id/bRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign up" />
 </LinearLayout>
