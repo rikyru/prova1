@@ -141,4 +141,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottommenu" />
 
+    <Button
+        android:id="@+id/HR_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Heart Rate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="547dp" />
+
 </android.support.constraint.ConstraintLayout>

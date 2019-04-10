@@ -313,4 +313,61 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
 
     }
 
+    public long insert_Alarm(String alarm, Context context){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        SharedPreferences user = context.getSharedPreferences("UserLogged", MODE_PRIVATE);
+        String user_id=user.getString("user_id","");
+        String measure_type_id="3"; //TODO: mappare i tipi di misure (2 è pressione, 1 HR, 3 Sveglie)
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_VALUE, alarm); //devo importare la stringa
+        String unixtimestamp = String.valueOf(System.currentTimeMillis() / 1000L); //TODO: passare la stringa quando la chiamo
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_TMSTMP, unixtimestamp );
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_ID_TYPE_MEASURE, measure_type_id);
+        values.put(DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER, user_id );
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(DatabaseContract.FeedEntry.TABLE_NAME_MEASURES, null, values);
+
+        return newRowId;
+
+    }
+
+    public String getAlarms(Context context) {
+        SharedPreferences user = context.getSharedPreferences("UserLogged", MODE_PRIVATE);
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER + " = ?" + " AND " + DatabaseContract.FeedEntry.COLUMN_NAME_ID_TYPE_MEASURE + " = 3";
+        String[] selectionArgs = { user.getString("user_id","") }; //query per user_id da shared preferences
+        String sortOrder =
+                DatabaseContract.FeedEntry.COLUMN_NAME_TMSTMP + " DESC";
+
+
+
+        // How you want the results sorted in the resulting Cursor
+
+        Cursor cursor = db.query(
+                DatabaseContract.FeedEntry.TABLE_NAME_MEASURES,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                selection, //selection,              // The columns for the WHERE clause
+                selectionArgs, //selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder         // The sort order
+        );
+        //String [] Alarms = new String[cursor.getCount()];
+        int i=0;
+        String Alarms = new String();
+        if (cursor.moveToFirst()) {
+            Alarms=cursor.getString(5);
+
+        }
+        cursor.close();
+
+        return Alarms;
+
+
+    }
+
 }

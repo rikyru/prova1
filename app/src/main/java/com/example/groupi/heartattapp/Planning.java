@@ -1,19 +1,38 @@
 package com.example.groupi.heartattapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
-public class Planning extends AppCompatActivity {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-    @Override
+public class Planning extends AppCompatActivity implements  TimePickerDialog.OnTimeSetListener
+   {
+        private TextView mTextView;
+        int alarmID = 1;
+
+
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planning);
+
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
 
@@ -47,5 +66,78 @@ public class Planning extends AppCompatActivity {
                 return false;
             }
         });
+            mTextView = findViewById(R.id.Alarm);
+
+            Button buttonTimePicker = findViewById(R.id.Button);
+            buttonTimePicker.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogFragment timePicker = new TimePickerFragment();
+                    timePicker.show(getSupportFragmentManager(), "time picker");
+                }
+            });
+
+        /* Button buttonCancelAlarm = findViewById(R.id.button_cancel);
+        buttonCancelAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelAlarm();
+            }
+        });*/
     }
+       @Override
+       public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+           Calendar c = Calendar.getInstance();
+           c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+           c.set(Calendar.MINUTE, minute);
+           c.set(Calendar.SECOND, 0);
+
+           updateTimeText(c);
+           String strDate = c.toString();
+           DatabaseDbHelper dbHelper = new DatabaseDbHelper(Planning.this);
+           dbHelper.insert_Alarm(strDate,Planning.this);
+           startAlarm(c, alarmID);
+           alarmID = alarmID + 1;
+       }
+
+       private void updateTimeText(Calendar c) {
+           String timeText = "Alarm set for: ";
+
+           DatabaseDbHelper dbHelper = new DatabaseDbHelper(Planning.this);
+           String alarm;
+           alarm=dbHelper.getAlarms(Planning.this);
+           timeText += alarm;
+
+           /*TODO: COLLEGAMENTO A DB PER SALVARE SVEGLIA PER UN UTENTE PARTICOLARE*/
+           //public boolean insertAlarm(int id, String timetext) -> da dichiarare in db
+           //query su measure table + alcuni field vuoti
+
+
+           //Al posto mettere query che legge tutte le sveglie per quell'utente
+           //showAlarms(int id);
+           //query su ID = 1 e measure type = 3
+           mTextView.setText(timeText);
+       }
+
+       private void startAlarm(Calendar c, int id) {
+           AlarmManager alarmManage = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+           Intent intent = new Intent(this, AlertReceiver.class);
+           PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, intent, 0);
+
+           if (c.before(Calendar.getInstance())) {
+               c.add(Calendar.DATE, 1);
+           }
+
+           alarmManage.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), 1000*60*60*24, pendingIntent);
+
+       }
+
+       private void cancelAlarm(int id) {
+           AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+           Intent intent = new Intent(this, AlertReceiver.class);
+           PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, intent, 0);
+
+           alarmManager.cancel(pendingIntent);
+           mTextView.setText("Alarm canceled");
+       }
 }

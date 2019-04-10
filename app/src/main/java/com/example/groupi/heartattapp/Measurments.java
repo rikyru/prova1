@@ -1,14 +1,21 @@
 package com.example.groupi.heartattapp;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -119,6 +126,33 @@ public class Measurments extends AppCompatActivity implements RadioGroup.OnCheck
 
                     }
                 }
+            }
+        });
+        final Button HRButton = findViewById(R.id.HR_Button);
+        HRButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    String description = "description";
+                    int importance = NotificationManager.IMPORTANCE_LOW;
+                    NotificationChannel channel = new NotificationChannel("CHANNEL_HR", "channel_hr", importance);
+                    channel.setDescription(description);
+                    channel.enableVibration(false);
+                    // Register the channel with the system; you can't change the importance
+                    // or other notification behaviors after this
+                    NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                    notificationManager.createNotificationChannel(channel);
+                }
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(Measurments.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+                else {
+                    Intent i = new Intent(getApplicationContext(), HRService.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(i);
+                    } else {
+                        startService(i);
+                    }
+                }
+
             }
         });
 
