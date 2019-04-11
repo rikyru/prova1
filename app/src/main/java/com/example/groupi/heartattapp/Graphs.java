@@ -77,7 +77,7 @@ public class Graphs extends AppCompatActivity {
         };
 
         // Filter results WHERE "title" = 'My Title'
-        String selection = DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER + " = ?";
+        String selection = DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER + " = ?" + " AND " + DatabaseContract.FeedEntry.COLUMN_NAME_ID_TYPE_MEASURE + " = 2";
         SharedPreferences user = getSharedPreferences("UserLogged", MODE_PRIVATE);
         String[] selectionArgs = {user.getString("user_id", "")}; //query per user_id da shared preferences
 

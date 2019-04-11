@@ -88,6 +88,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         contentValues.put(DatabaseContract.FeedEntry.COLUMN_NAME_DR_EMAIL, physician);
 
         long result = db.insert(DatabaseContract.FeedEntry.TABLE_NAME_USERS, null, contentValues);
+        db.close();
 
         if (result == -1) {
             return false;
@@ -107,6 +108,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + DatabaseContract.FeedEntry.TABLE_NAME_USERS;
         Cursor res = db.rawQuery(query, null);
+        db.close();
         return res;
     }
 
@@ -123,6 +125,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         contentValues.put(DatabaseContract.FeedEntry.COLUMN_NAME_DR_EMAIL, physician);
 
         int result = db.update(DatabaseContract.FeedEntry.TABLE_NAME_USERS, contentValues, "id = ?", new String[]{id});
+        db.close();
 
         if (result == -1)
             return false;
@@ -145,6 +148,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         //String query = "Select * from user_table where username=?", new String[]{username});
         Cursor uCursor = db.rawQuery("Select * from users  where username=?", new String[]{username}); //potrebbe non funzionare //TODO: vedere se si ouo migliorare la query
+        db.close();
 
         if (uCursor.getCount() > 0)
             return true;
@@ -161,6 +165,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         //String query = "SELECT USERNAME, PASSWORD FROM " + TABLE_NAME;
         Cursor pCursor = db.rawQuery("select * from users where username=? and password=?", new String[]{checkUsername, checkPassword});
+        db.close();
 
         if (pCursor.getCount() > 0) {
             String PREFERENCE_FILENAME = "UserLogged"; //per tenere traccia di chi è loggato
@@ -192,7 +197,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         };
 
         // Filter results WHERE "title" = 'My Title'
-        String selection = DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER + " = ?";
+        String selection = DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER + " = ?" + " AND " + DatabaseContract.FeedEntry.COLUMN_NAME_ID_TYPE_MEASURE + " = 2";
         //String query = "Select * from user_table where username=?", new String[]{username});
         String[] selectionArgs = { user.getString("user_id","") }; //query per user_id da shared preferences
 
@@ -231,6 +236,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         blood.systolic=systolic;
         blood.diastolic=diastolic;
         blood.date=formattedDate;
+        db.close();
 
         return blood;
 
@@ -280,6 +286,8 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         record.password=password;
         record.dr_email=dr_email;
 
+        db.close();
+
         return record;
 
 
@@ -306,6 +314,8 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(DatabaseContract.FeedEntry.TABLE_NAME_MEASURES, null, values);
 
+        db.close();
+
         if (newRowId == -1)
             return false;
         else
@@ -313,7 +323,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
 
     }
 
-    public long insert_Alarm(String alarm, Context context){
+    public long insert_Alarm(Long alarm, Context context){
 
         SQLiteDatabase db = this.getWritableDatabase();
         SharedPreferences user = context.getSharedPreferences("UserLogged", MODE_PRIVATE);
@@ -331,11 +341,13 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(DatabaseContract.FeedEntry.TABLE_NAME_MEASURES, null, values);
 
+        db.close();
+
         return newRowId;
 
     }
 
-    public String getAlarms(Context context) {
+    public Long getAlarms(Context context) {
         SharedPreferences user = context.getSharedPreferences("UserLogged", MODE_PRIVATE);
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = DatabaseContract.FeedEntry.COLUMN_NAME_ID_USER + " = ?" + " AND " + DatabaseContract.FeedEntry.COLUMN_NAME_ID_TYPE_MEASURE + " = 3";
@@ -358,14 +370,23 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         );
         //String [] Alarms = new String[cursor.getCount()];
         int i=0;
-        String Alarms = new String();
+        db.close();
         if (cursor.moveToFirst()) {
-            Alarms=cursor.getString(5);
+            Long Alarms=cursor.getLong(4);
+            Log.d("alarm",String.valueOf(Alarms));
+            cursor.close();
+            return Alarms;
+
 
         }
-        cursor.close();
+        else{
+            Long nothing=Long.valueOf("no alarm set");
+            cursor.close();
+            return nothing;
+        }
 
-        return Alarms;
+
+
 
 
     }

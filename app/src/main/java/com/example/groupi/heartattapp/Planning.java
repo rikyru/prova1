@@ -20,6 +20,8 @@ import android.widget.TimePicker;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Planning extends AppCompatActivity implements  TimePickerDialog.OnTimeSetListener
    {
@@ -84,6 +86,7 @@ public class Planning extends AppCompatActivity implements  TimePickerDialog.OnT
                 cancelAlarm();
             }
         });*/
+        updateTimeText();
     }
        @Override
        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -92,22 +95,25 @@ public class Planning extends AppCompatActivity implements  TimePickerDialog.OnT
            c.set(Calendar.MINUTE, minute);
            c.set(Calendar.SECOND, 0);
 
-           updateTimeText(c);
-           String strDate = c.toString();
+
+           Long strDate = c.getTimeInMillis();
            DatabaseDbHelper dbHelper = new DatabaseDbHelper(Planning.this);
            dbHelper.insert_Alarm(strDate,Planning.this);
            startAlarm(c, alarmID);
            alarmID = alarmID + 1;
+           updateTimeText();
        }
 
-       private void updateTimeText(Calendar c) {
+       private void updateTimeText() {
            String timeText = "Alarm set for: ";
 
            DatabaseDbHelper dbHelper = new DatabaseDbHelper(Planning.this);
-           String alarm;
-           alarm=dbHelper.getAlarms(Planning.this);
-           timeText += alarm;
+           Long alarm;
 
+           alarm=dbHelper.getAlarms(Planning.this);
+           SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+           String alarmString = formatter.format(new Date(alarm));
+           timeText += alarmString;
            /*TODO: COLLEGAMENTO A DB PER SALVARE SVEGLIA PER UN UTENTE PARTICOLARE*/
            //public boolean insertAlarm(int id, String timetext) -> da dichiarare in db
            //query su measure table + alcuni field vuoti
