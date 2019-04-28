@@ -20,15 +20,20 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static android.support.constraint.Constraints.TAG;
+
 
 public class HRService extends Service {
     boolean isFound=false;
+    int counter=0;
+    int[] hr_measures = new int[5];
     public HRService() {
     }
 
@@ -181,6 +186,8 @@ public class HRService extends Service {
     private BluetoothManager btManager;
     private static Context context;
 
+
+
     public final UUID HR_MEASUREMENT = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb");
     public final UUID HR_SERVICE = UUID.fromString("0000180D-0000-1000-8000-00805f9b34fb");
     public static final UUID DESCRIPTOR_CCC = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -253,6 +260,7 @@ public class HRService extends Service {
                             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(DESCRIPTOR_CCC);
                             gatt.setCharacteristicNotification(characteristic, true);
                             descriptor.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
+                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                             gatt.writeDescriptor(descriptor);
                         }
                     }
@@ -269,6 +277,7 @@ public class HRService extends Service {
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
         }
+
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
@@ -304,6 +313,16 @@ public class HRService extends Service {
                         rrs.add(rrValue);
                     }
                 }
+                if (counter < 5){
+                    hr_measures[counter]=hrValue;
+                    counter ++;
+                }
+                else
+                {
+                    int avg_hr = average(hr_measures);
+
+                    sendMessageToActivity(String.valueOf(avg_hr));
+                }
             }
         }
 
@@ -315,6 +334,7 @@ public class HRService extends Service {
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
+            Log.d(TAG, "onDescriptorWrite :" + ((status == BluetoothGatt.GATT_SUCCESS) ? "Sucess" : "false"));
         }
 
         @Override
@@ -376,14 +396,20 @@ public class HRService extends Service {
 
         }
     };
-    private static void sendMessageToActivity(String sys, String dia, String pulse) {
-        Intent intent = new Intent("BP Measure Update");
+    private static void sendMessageToActivity(String sys) {
+        Intent intent = new Intent("Hr Measure Update");
         // You can also include some extra data.
-        intent.putExtra("systolic", sys);
-        intent.putExtra("diastolic", dia);
-        intent.putExtra("pulse", pulse);
+        intent.putExtra("meanHR", sys);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
-}
+
+    public int average(int[] data) {
+        int sum = 0;
+        for (int d : data) sum += d;
+        int average = sum / data.length;
+        return average;
+    }
+
+    }
 
 

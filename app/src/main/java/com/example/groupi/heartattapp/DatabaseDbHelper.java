@@ -165,7 +165,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         //String query = "SELECT USERNAME, PASSWORD FROM " + TABLE_NAME;
         Cursor pCursor = db.rawQuery("select * from users where username=? and password=?", new String[]{checkUsername, checkPassword});
-        db.close();
+
 
         if (pCursor.getCount() > 0) {
             String PREFERENCE_FILENAME = "UserLogged"; //per tenere traccia di chi è loggato
@@ -176,10 +176,14 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
             }
             prefEditor.apply();
 
+            db.close();
+
             return true;
         }
-        else
+        else {
+            db.close();
             return false;
+        }
 
     }
 
@@ -370,11 +374,12 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         );
         //String [] Alarms = new String[cursor.getCount()];
         int i=0;
-        db.close();
+
         if (cursor.moveToFirst()) {
             Long Alarms=cursor.getLong(4);
             Log.d("alarm",String.valueOf(Alarms));
             cursor.close();
+            db.close();
             return Alarms;
 
 
@@ -382,6 +387,7 @@ public class DatabaseDbHelper extends SQLiteOpenHelper {
         else{
             Long nothing=Long.valueOf("no alarm set");
             cursor.close();
+            db.close();
             return nothing;
         }
 

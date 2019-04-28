@@ -3,8 +3,11 @@ package com.example.groupi.heartattapp;
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -38,6 +42,16 @@ public class Measurments extends AppCompatActivity implements RadioGroup.OnCheck
     private String op1;
     private Boolean isEmpty;
     private BloodPressureMeasurement measure;
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String sys = "HR mean of 5: " + intent.getStringExtra("meanHR"); //TODO:Sistemare, buttare le misure sul db
+            Toast.makeText(context, "New Measurement!", Toast.LENGTH_SHORT).show();
+            System.out.println(sys);
+        }
+    };
 
 
 
@@ -147,11 +161,13 @@ public class Measurments extends AppCompatActivity implements RadioGroup.OnCheck
                 else {
                     Intent i = new Intent(getApplicationContext(), HRService.class);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        startForegroundService(i);
+                        startService(i);//startForegroundService(i);
                     } else {
                         startService(i);
                     }
                 }
+                LocalBroadcastManager.getInstance(Measurments.this).registerReceiver(
+                        mMessageReceiver, new IntentFilter("HR Measure Update"));
 
             }
         });

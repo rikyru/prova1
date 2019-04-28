@@ -91,8 +91,10 @@ public class Graphs extends AppCompatActivity {
                 selection, //selection,              // The columns for the WHERE clause
                 selectionArgs, //selectionArgs,          // The values for the WHERE clause
                 null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                sortOrder               // The sort order
+                null,// don't filter by row groups
+                sortOrder, //sort order
+                "10"//  limit of the query
+
         );
         recordAdapter = new RecordAdapter(this, new ArrayList<Record>()); //TODO: implementare diversi recordadapter per pressione e heart rate
         final ListView recordsView = (ListView) findViewById(R.id.records_view);
